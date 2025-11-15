@@ -1,0 +1,485 @@
+{
+  "address": "GmVVTa2jWgisJZAwbXHEVttEYxYcHDcLHBBxnD1mUmTq",
+  "metadata": {
+    "name": "voting_dapp",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cast_vote",
+      "discriminator": [
+        20,
+        212,
+        15,
+        189,
+        69,
+        180,
+        69,
+        151
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true
+        },
+        {
+          "name": "vote_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  116,
+                  101,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "poll"
+              },
+              {
+                "kind": "account",
+                "path": "voter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vote_option_1",
+          "type": "u8"
+        },
+        {
+          "name": "vote_option_2",
+          "type": {
+            "option": "u8"
+          }
+        },
+        {
+          "name": "minus_vote_index",
+          "type": {
+            "option": "u8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "close_poll",
+      "discriminator": [
+        139,
+        213,
+        162,
+        65,
+        172,
+        150,
+        123,
+        67
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true
+        },
+        {
+          "name": "creator",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_poll",
+      "discriminator": [
+        182,
+        171,
+        112,
+        238,
+        6,
+        219,
+        14,
+        110
+      ],
+      "accounts": [
+        {
+          "name": "poll",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  108,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "account",
+                "path": "poll_counter.poll_count",
+                "account": "PollCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "poll_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  108,
+                  108,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "question",
+          "type": "string"
+        },
+        {
+          "name": "candidates",
+          "type": {
+            "vec": "string"
+          }
+        },
+        {
+          "name": "max_plus_votes",
+          "type": "u8"
+        },
+        {
+          "name": "allow_minus_vote",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "initialize_poll_counter",
+      "discriminator": [
+        137,
+        220,
+        157,
+        142,
+        86,
+        145,
+        205,
+        138
+      ],
+      "accounts": [
+        {
+          "name": "poll_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  108,
+                  108,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Poll",
+      "discriminator": [
+        110,
+        234,
+        167,
+        188,
+        231,
+        136,
+        153,
+        111
+      ]
+    },
+    {
+      "name": "PollCounter",
+      "discriminator": [
+        196,
+        1,
+        77,
+        116,
+        60,
+        205,
+        237,
+        189
+      ]
+    },
+    {
+      "name": "VoteRecord",
+      "discriminator": [
+        112,
+        9,
+        123,
+        165,
+        234,
+        9,
+        157,
+        167
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidCandidateCount",
+      "msg": "Poll must have between 3 and 8 candidates"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidMaxVotes",
+      "msg": "Max plus votes must be between 2 and 3"
+    },
+    {
+      "code": 6002,
+      "name": "QuestionTooLong",
+      "msg": "Question is too long (max 200 characters)"
+    },
+    {
+      "code": 6003,
+      "name": "CandidateNameTooLong",
+      "msg": "Candidate name is too long (max 50 characters)"
+    },
+    {
+      "code": 6004,
+      "name": "PollClosed",
+      "msg": "Poll is closed"
+    },
+    {
+      "code": 6005,
+      "name": "TooManyPlusVotes",
+      "msg": "Too many plus votes"
+    },
+    {
+      "code": 6006,
+      "name": "MustCastAtLeastOnePlusVote",
+      "msg": "Must cast at least one plus vote"
+    },
+    {
+      "code": 6007,
+      "name": "DuplicateVote",
+      "msg": "Cannot vote for the same candidate twice"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidCandidateIndex",
+      "msg": "Invalid candidate index"
+    },
+    {
+      "code": 6009,
+      "name": "MinusVoteNotAllowed",
+      "msg": "Minus vote is not allowed for this poll"
+    },
+    {
+      "code": 6010,
+      "name": "MinusVoteRequiresTwoPlusVotes",
+      "msg": "Minus vote requires at least two plus votes"
+    },
+    {
+      "code": 6011,
+      "name": "CannotPlusAndMinusSameCandidate",
+      "msg": "Cannot cast plus and minus vote for same candidate"
+    },
+    {
+      "code": 6012,
+      "name": "PollAlreadyClosed",
+      "msg": "Poll is already closed"
+    },
+    {
+      "code": 6013,
+      "name": "Unauthorized",
+      "msg": "Unauthorized: Only poll creator can close poll"
+    }
+  ],
+  "types": [
+    {
+      "name": "Poll",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "poll_id",
+            "type": "u64"
+          },
+          {
+            "name": "question",
+            "type": "string"
+          },
+          {
+            "name": "candidates",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "vote_counts",
+            "type": {
+              "vec": "i64"
+            }
+          },
+          {
+            "name": "total_voters",
+            "type": "u64"
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "max_plus_votes",
+            "type": "u8"
+          },
+          {
+            "name": "allow_minus_vote",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PollCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "poll_count",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voter",
+            "type": "pubkey"
+          },
+          {
+            "name": "poll",
+            "type": "pubkey"
+          },
+          {
+            "name": "vote_option_1",
+            "type": "u8"
+          },
+          {
+            "name": "vote_option_2",
+            "type": {
+              "option": "u8"
+            }
+          },
+          {
+            "name": "minus_vote",
+            "type": {
+              "option": "u8"
+            }
+          },
+          {
+            "name": "voted_at",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

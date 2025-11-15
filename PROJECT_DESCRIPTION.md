@@ -1,6 +1,6 @@
 # Project Description
 
-**Deployed Frontend URL:** [yet to be filled]
+**Deployed Frontend URL:** https://votechain-project.vercel.app
 
 **Solana Program ID:** GmVVTa2jWgisJZAwbXHEVttEYxYcHDcLHBBxnD1mUmTq
 
